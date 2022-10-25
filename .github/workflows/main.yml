@@ -16,11 +16,11 @@ jobs:
           Install-Module -Name Az.Accounts -MinimumVersion 2.10.2
           Install-Module -Name Az.Synapse -MinimumVersion 2.0.0
           Install-Module -Name Az.Sql -MinimumVersion 4.0.0
-      - name: Import custom module, test manifest and publish to PSGallery
+      - name: Import custom module & publish to PSGallery
         shell: pwsh
         run: |
+          Invoke-WebRequest -Uri https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -OutFile "$env:LOCALAPPDATA\Microsoft\Windows\PowerShell\PowerShellGet\NuGet.exe"
           Import-Module '.\Add-AzFirewallRule' -Global -Force
-          function Test-ManifestBool ($path) {$a = dir $path | Test-ModuleManifest -ErrorAction SilentlyContinue; $?}
-          $test = Test-ManifestBool .\Add-AzFirewallRule\Add-AzFirewallRule.psd1
-          if ($test) {Publish-Module -Path '.\Add-AzFirewallRule' -NuGetApiKey ${{ secrets.PSGALLERY_APIKEY }} -Verbose -Force}
+          Publish-Module -Path '.\Add-AzFirewallRule' -NuGetApiKey ${{ secrets.PSGALLERY_APIKEY }} -Verbose -Force
+
           
