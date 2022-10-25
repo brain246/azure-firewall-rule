@@ -12,7 +12,7 @@
     RootModule = 'Add-AzFirewallRule'
 
     # Version number of this module.
-    ModuleVersion = '0.0.4'
+    ModuleVersion = '0.0.5'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core', 'Desktop')
@@ -34,6 +34,13 @@
 
     # Minimum version of the Windows PowerShell engine required by this module
     PowerShellVersion = '5.1'
+
+    # Required modules
+    RequiredModules = @(
+        @{ModuleName = 'Az.Accounts'; ModuleVersion = '2.10.2'; }
+        @{ModuleName = 'Az.Synapse';  ModuleVersion = '2.0.0';  }
+        @{ModuleName = 'Az.Sql';      ModuleVersion = '4.0.0';  }
+    )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @('Add-AzFirewallRule')

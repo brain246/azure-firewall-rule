@@ -9,6 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Install dependencies from PSGallery
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Untrusted
+          Install-Module Az.Accounts, Az.Synapse, Az.Sql -Force
       - name: Publish to PSGallery
         uses: pcgeek86/publish-powershell-module-action@v20
         id: publish-module
