@@ -6,17 +6,23 @@ on:
       - 'Add-AzFirewallRule/**'
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install dependencies from PSGallery
+      - name: Install dependencies from PSGallery & publish to Gallery
         shell: pwsh
         run: |
-          Set-PSRepository PSGallery -InstallationPolicy Untrusted
-          Install-Module Az.Accounts, Az.Synapse, Az.Sql -Force
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module -Name Az.Accounts -MinimumVersion 2.10.2 -Force
+          Install-Module -Name Az.Synapse -MinimumVersion 2.0.0 -Force
+          Install-Module -Name Az.Sql -MinimumVersion 4.0.0 -Force
+          Import-Module -Name Az.Accounts -MinimumVersion 2.10.2 -Global -Force
+          Import-Module -Name Az.Synapse -MinimumVersion 2.0.0 -Global -Force
+          Import-Module -Name Az.Sql -MinimumVersion 4.0.0 -Global -Force
+          Import-Module '.\Add-AzFirewallRule' -Global -Force
+          Publish-Module -Path '.\Add-AzFirewallRule' -NuGetApiKey ${{ secrets.PSGALLERY_APIKEY }} -Verbose -Force
       - name: Publish to PSGallery
-        uses: pcgeek86/publish-powershell-module-action@v20
-        id: publish-module
-        with:
-          NuGetApiKey: ${{ secrets.PSGALLERY_APIKEY }}
+        shell: pwsh
+        run: |
+          
           
