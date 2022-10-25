@@ -12,7 +12,7 @@
     RootModule = 'Add-AzFirewallRule'
 
     # Version number of this module.
-    ModuleVersion = '0.0.3'
+    ModuleVersion = '0.0.4'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core', 'Desktop')
@@ -50,8 +50,12 @@
     PrivateData = @{
 
         PSData = @{
+
             # Tags applied to this module. These help with module discovery in online galleries.
             Tags = @("Azure", "Synapse", "SQL", "Firewall", "Rule")
+
+            # A URL to the main website for this project.
+            ProjectUri = 'https://github.com/brain246/Add-AzFirewallRule'
 
             # External dependent modules of this module
             ExternalModuleDependencies = @("Az.Accounts", "Az.Synapse", "Az.Sql")

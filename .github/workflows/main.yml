@@ -1,0 +1,17 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Add-AzFirewallRule/**'
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Publish to PSGallery
+        uses: pcgeek86/publish-powershell-module-action@v20
+        id: publish-module
+        with:
+          NuGetApiKey: ${{ secrets.PSGALLERY_APIKEY }}
+          
