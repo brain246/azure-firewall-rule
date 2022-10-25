@@ -6,6 +6,11 @@ This Powershell module adds-or-updates firewall rules for your current client ip
 
 ## Installation
 
+### Dependencies
+- Az.Accounts
+- Az.Synapse
+- Az.Sql
+
 ### Elevated[^1] installation for all users
 
 ```powershell
