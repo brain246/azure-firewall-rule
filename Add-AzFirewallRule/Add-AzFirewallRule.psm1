@@ -22,7 +22,10 @@
         If no ip address is provided, the external ip of the current client will be used. For this feature to work the URL https://api.ipify.org must be accessible.
 
     .DEPENDENCIES
-        This module requires the following Az modules: Az.Accounts, Az.Synapse, Az.Sql
+        This module requires the following Az modules: 
+        - Az.Accounts (2.10.2 or higher)
+        - Az.Synapse (2.0.0 or higher)
+        - Az.Sql (4.0.0 or higher)
         See https://learn.microsoft.com/en-us/powershell/azure for more information.
 
     .EXAMPLE
@@ -41,6 +44,65 @@ function Add-AzFirewallRule {
         [string]$firewallRuleName,
         [string]$clientIpAddress
     )
+
+    # Check if DotNet Framework 4.7.2 is installed
+    function Test-DotNet
+    {
+        try
+        {
+            if ((Get-PSDrive 'HKLM' -ErrorAction Ignore) -and (-not (Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\' -ErrorAction Stop | Get-ItemPropertyValue -ErrorAction Stop -Name Release | Where-Object { $_ -ge 461808 })))
+            {
+                throw ".NET Framework versions lower than 4.7.2 are not supported in Az. Please upgrade to .NET Framework 4.7.2 or higher."
+            }
+        }
+        catch [System.Management.Automation.DriveNotFoundException]
+        {
+            Write-Verbose ".NET Framework version check failed."
+        }
+    }
+
+    # Check PS Desktop Version >= 5.1
+    if ($true -and ($PSEdition -eq 'Desktop'))
+    {
+        if ($PSVersionTable.PSVersion -lt [Version]'5.1')
+        {
+            throw "PowerShell versions lower than 5.1 are not supported in Az. Please upgrade to PowerShell 5.1 or higher."
+        }
+        Test-DotNet
+    }
+
+    # Check PS Core Version >= 6.2.4 
+    if ($true -and ($PSEdition -eq 'Core'))
+    {
+        if ($PSVersionTable.PSVersion -lt [Version]'6.2.4')
+        {
+            throw "Current Az version doesn't support PowerShell Core versions lower than 6.2.4. Please upgrade to PowerShell Core 6.2.4 or higher."
+        }
+    }
+
+    # Check module dependency: Az.Accounts >= 2.10.2
+    $module = Get-Module Az.Accounts 
+    if ($module -and $module.Version -lt [System.Version]"2.10.2") { 
+        Write-Error "This module requires Az.Accounts version 2.10.2. An earlier version of Az.Accounts is imported in the current PowerShell session. Please open a new session before importing this module. This error could indicate that multiple incompatible versions of the Azure PowerShell cmdlets are installed on your system. Please see https://aka.ms/azps-version-error for troubleshooting information." -ErrorAction Stop 
+    } elseif (!$module) { 
+        Import-Module Az.Accounts -MinimumVersion 2.10.2 -Scope Global 
+    }
+
+    # Check module dependency: Az.Synapse >= 2.0.0
+    $module = Get-Module Az.Synapse 
+    if ($module -and $module.Version -lt [System.Version]"2.0.0") { 
+        Write-Error "This module requires Az.Synapse version 2.0.0. An earlier version of Az.Synapse is imported in the current PowerShell session. Please open a new session before importing this module. This error could indicate that multiple incompatible versions of the Azure PowerShell cmdlets are installed on your system. Please see https://aka.ms/azps-version-error for troubleshooting information." -ErrorAction Stop 
+    } elseif (!$module) { 
+        Import-Module Az.Accounts -MinimumVersion 2.0.0 -Scope Global 
+    }
+
+    # Check module dependency: Az.Sql >= 4.0.0
+    $module = Get-Module Az.Sql 
+    if ($module -and $module.Version -lt [System.Version]"4.0.0") { 
+        Write-Error "This module requires Az.Sql version 4.0.0. An earlier version of Az.Sql is imported in the current PowerShell session. Please open a new session before importing this module. This error could indicate that multiple incompatible versions of the Azure PowerShell cmdlets are installed on your system. Please see https://aka.ms/azps-version-error for troubleshooting information." -ErrorAction Stop 
+    } elseif (!$module) { 
+        Import-Module Az.Accounts -MinimumVersion 4.0.0 -Scope Global 
+    }
 
     # Check if there is a current Azure session context for the provided tenant and subcription.
     # If no suitable context is available, logout of the current session and interactively login to the correct tenant/subscription.

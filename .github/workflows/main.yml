@@ -9,20 +9,18 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install dependencies from PSGallery & publish to Gallery
+      - name: Install module dependencies from PSGallery
         shell: pwsh
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
-          Install-Module -Name Az.Accounts -MinimumVersion 2.10.2 -Force
-          Install-Module -Name Az.Synapse -MinimumVersion 2.0.0 -Force
-          Install-Module -Name Az.Sql -MinimumVersion 4.0.0 -Force
-          Import-Module -Name Az.Accounts -MinimumVersion 2.10.2 -Global -Force
-          Import-Module -Name Az.Synapse -MinimumVersion 2.0.0 -Global -Force
-          Import-Module -Name Az.Sql -MinimumVersion 4.0.0 -Global -Force
-          Import-Module '.\Add-AzFirewallRule' -Global -Force
-          Publish-Module -Path '.\Add-AzFirewallRule' -NuGetApiKey ${{ secrets.PSGALLERY_APIKEY }} -Verbose -Force
-      - name: Publish to PSGallery
+          Install-Module -Name Az.Accounts -MinimumVersion 2.10.2
+          Install-Module -Name Az.Synapse -MinimumVersion 2.0.0
+          Install-Module -Name Az.Sql -MinimumVersion 4.0.0
+      - name: Import custom module, test manifest and publish to PSGallery
         shell: pwsh
         run: |
-          
+          Import-Module '.\Add-AzFirewallRule' -Global -Force
+          function Test-ManifestBool ($path) {$a = dir $path | Test-ModuleManifest -ErrorAction SilentlyContinue; $?}
+          $test = Test-ManifestBool .\Add-AzFirewallRule\Add-AzFirewallRule.psd1
+          if ($test) {Publish-Module -Path '.\Add-AzFirewallRule' -NuGetApiKey ${{ secrets.PSGALLERY_APIKEY }} -Verbose -Force}
           
