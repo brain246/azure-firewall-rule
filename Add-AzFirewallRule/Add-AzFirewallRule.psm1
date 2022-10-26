@@ -93,7 +93,7 @@ function Add-AzFirewallRule {
     if ($module -and $module.Version -lt [System.Version]"2.0.0") { 
         Write-Error "This module requires Az.Synapse version 2.0.0. An earlier version of Az.Synapse is imported in the current PowerShell session. Please open a new session before importing this module. This error could indicate that multiple incompatible versions of the Azure PowerShell cmdlets are installed on your system. Please see https://aka.ms/azps-version-error for troubleshooting information." -ErrorAction Stop 
     } elseif (!$module) { 
-        Import-Module Az.Accounts -MinimumVersion 2.0.0 -Scope Global 
+        Import-Module Az.Synapse -MinimumVersion 2.0.0 -Scope Global 
     }
 
     # Check module dependency: Az.Sql >= 4.0.0
@@ -101,7 +101,7 @@ function Add-AzFirewallRule {
     if ($module -and $module.Version -lt [System.Version]"4.0.0") { 
         Write-Error "This module requires Az.Sql version 4.0.0. An earlier version of Az.Sql is imported in the current PowerShell session. Please open a new session before importing this module. This error could indicate that multiple incompatible versions of the Azure PowerShell cmdlets are installed on your system. Please see https://aka.ms/azps-version-error for troubleshooting information." -ErrorAction Stop 
     } elseif (!$module) { 
-        Import-Module Az.Accounts -MinimumVersion 4.0.0 -Scope Global 
+        Import-Module Az.Sql -MinimumVersion 4.0.0 -Scope Global 
     }
 
     # Check if there is a current Azure session context for the provided tenant and subcription.

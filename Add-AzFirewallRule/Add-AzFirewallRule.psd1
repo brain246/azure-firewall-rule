@@ -12,7 +12,7 @@
 RootModule = 'Add-AzFirewallRule.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.0.8'
+ModuleVersion = '0.0.9'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Desktop', 'Core'
@@ -111,7 +111,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Recreated module manifest'
+        ReleaseNotes = 'v0.0.9: Fixed dependency check & import of Az modules'
 
     } # End of PSData hashtable
 
