@@ -26,7 +26,17 @@ Install-Module -Name Add-AzFirewallRule -Scope CurrentUser
 ## Usage
 
 ```powershell
+# Provide specific tenant/subscription
 Add-AzFirewallRule -tenantId "myAzureTenantId" -SubscriptionId "myAzureSubscriptionId" -resourceGroupName "myResourceGroup"
+# Or use tenant and subscription of your current context
+Add-AzFirewallRule -tenantId $((Get-AzContext).Tenant.Id) -SubscriptionId $((Get-AzContext).Subscription.Id) -resourceGroupName "myResourceGroup" 
 ```
+
+## Pipeline Status
+
+[![.github/workflows/main.yml](https://github.com/brain246/Add-AzFirewallRule/actions/workflows/main.yml/badge.svg)](https://github.com/brain246/Add-AzFirewallRule/actions/workflows/main.yml)
+
+## Resources
+[Powershell Gallery](https://www.powershellgallery.com/packages/Add-AzFirewallRule)
 
 [^1]: Needs the Powershell console to be executed als local administrator.
