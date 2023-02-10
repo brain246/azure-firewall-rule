@@ -67,21 +67,11 @@ function Add-AzFirewallRule {
 			[Parameter(Mandatory)][string]$module_in,
 			[Parameter(Mandatory)][string]$version
 		)
-		
 		$module = Get-Module $module_in
-		if ($module -and $module.Version -lt [System.Version]$version) { 
-			Write-Host "This module requires $module_in version $version or higher. An earlier version of $module_in is used in the current PowerShell session. Trying to update and import the module now..."
-			Update-Module -Name $module_in -MinimumVersion $version -Scope CurrentUser -Force
-			Import-Module -Name $module_in -MinimumVersion $version -Scope CurrentUser -Force	
-		} elseif (!$module) {
-			Write-Host "This module requires Az.Accounts version $version or higher. No module version could be found. Trying to install and import the module now..."
-			Install-Module -Name $module_in -MinimumVersion $version -Scope CurrentUser -Force -AllowClobber 
-			Import-Module  -Name $module_in -MinimumVersion $version -Scope CurrentUser -Force
-		}
-		
-		$module = Get-Module $module_in
-		if (!$module -or ($module -and $module.Version -lt [System.Version]$version)) {
-			Write-Error "Something went wrong when trying to install/update/import module dependency: $module_in version $version or higher. Please update/install the latest version manually and then restart your console." -ErrorAction Stop
+		if ($module -and $module.Version -lt [System.Version]$version) {  
+			Write-Error "This module requires $module_in version $version or higher. An earlier version of Az.Accounts is imported in the current PowerShell session. Please open a new session before importing this module. This error could indicate that multiple incompatible versions of the Azure PowerShell cmdlets are installed on your system. Please see https://aka.ms/azps-version-error for troubleshooting information." -ErrorAction Stop 
+		} elseif (!$module) { 
+			Import-Module Az.Accounts -MinimumVersion 2.10.2 -Scope CurrentUser -Force 
 		}
     }
 
